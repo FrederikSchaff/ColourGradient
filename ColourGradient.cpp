@@ -105,15 +105,18 @@ namespace ColorGradient
     {
       color_WhiteYellow.clear();
       color_WhiteYellow.push_back(ColorPoint(1, 1, 1,   0.0f));      // White.
-      color_RedWhiteRed.push_back(ColorPoint(.75, .75, .0,   1.0f));     // Yellow.
+//       color_WhiteYellow.push_back(ColorPoint(1, .95, .7,   0.2f));     // Yellow
+//       color_WhiteYellow.push_back(ColorPoint(1, .89, .4,   0.5f));     // Yellow
+//       color_WhiteYellow.push_back(ColorPoint(1, .86, .2,   0.75f));     // Yellow.
+      color_WhiteYellow.push_back(ColorPoint(.965, .831, .192,   1.0f));     // Yellow.
     }
 
     //White Blue heatmap:
     void createWhiteBlueGradient()
     {
-      color_WhiteYellow.clear();
-      color_WhiteYellow.push_back(ColorPoint(1, 1, 1,   0.0f));      // White.
-      color_RedWhiteRed.push_back(ColorPoint(.25, .5, .9,   1.0f));     // Yellow.
+      color_WhiteBlue.clear();
+      color_WhiteBlue.push_back(ColorPoint(1, 1, 1,   0.0f));      // White.
+      color_WhiteBlue.push_back(ColorPoint(.25, .5, .9,   1.0f));     // Blue.
     }
   
     //-- Inputs a (value) between 0 and 1 and outputs the (red), (green) and (blue)
