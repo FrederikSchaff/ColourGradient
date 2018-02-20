@@ -29,13 +29,15 @@ namespace ColorGradient
     };
     vector<ColorPoint> color;      // An array of color points in ascending value.
     vector<ColorPoint> color_monochrome;   //White to black
-    vector<ColorPoint> color_RedWhiteGreen; //Red to white to blue
+    vector<ColorPoint> color_RedWhiteGreen; //Red to white to green
+    vector<ColorPoint> color_RedWhiteBlue; //Red to white to blue
     vector<ColorPoint> color_RedWhiteRed; //Red to white to red
-  
+    vector<ColorPoint> color_WhiteYellow; //White to yellow
+    vector<ColorPoint> color_WhiteBlue; //White to blue
   
   public:
     //-- Default constructor:
-    ColorGradient()  {  createDefaultHeatMapGradient(); createMonochromeGradient(); createRedWhiteGreenGradient(); createRedWhiteRedGradient();}
+    ColorGradient()  {  createDefaultHeatMapGradient(); createMonochromeGradient(); createRedWhiteGreenGradient(); createRedWhiteBlueGradient(); createRedWhiteRedGradient(); createWhiteYellowGradient(); createWhiteBlueGradient();}
   
     //-- Inserts a new color point into its correct position:
     void addColorPoint(float red, float green, float blue, float value)
@@ -78,6 +80,16 @@ namespace ColorGradient
       color_RedWhiteGreen.push_back(ColorPoint(1, 1, 1,   0.5f));      // White.
       color_RedWhiteGreen.push_back(ColorPoint(0, 1, 0,   1.0f));     // Green.
     }
+
+    //Red White Blue heatmap:
+    void createRedWhiteBlueGradient()
+    {
+      color_RedWhiteBlue.clear();
+      color_RedWhiteBlue.push_back(ColorPoint(1, 0, 0,   0.0f));      // Red.
+      color_RedWhiteBlue.push_back(ColorPoint(1, 1, 1,   0.5f));      // White.
+      color_RedWhiteBlue.push_back(ColorPoint(0, 0, 1,   1.0f));     // Blue.
+    }
+
   
     //Red White Red heatmap:
     void createRedWhiteRedGradient()
@@ -86,6 +98,22 @@ namespace ColorGradient
       color_RedWhiteRed.push_back(ColorPoint(1, 0, 0,   0.0f));      // Red.
       color_RedWhiteRed.push_back(ColorPoint(1, 1, 1,   0.5f));      // White.
       color_RedWhiteRed.push_back(ColorPoint(1, 0, 0,   1.0f));     // Red.
+    }
+
+    //White Yellow heatmap:
+    void createWhiteYellowGradient()
+    {
+      color_WhiteYellow.clear();
+      color_WhiteYellow.push_back(ColorPoint(1, 1, 1,   0.0f));      // White.
+      color_RedWhiteRed.push_back(ColorPoint(.75, .75, .0,   1.0f));     // Yellow.
+    }
+
+    //White Blue heatmap:
+    void createWhiteBlueGradient()
+    {
+      color_WhiteYellow.clear();
+      color_WhiteYellow.push_back(ColorPoint(1, 1, 1,   0.0f));      // White.
+      color_RedWhiteRed.push_back(ColorPoint(.25, .5, .9,   1.0f));     // Yellow.
     }
   
     //-- Inputs a (value) between 0 and 1 and outputs the (red), (green) and (blue)
@@ -164,6 +192,31 @@ namespace ColorGradient
       blue  = color_RedWhiteGreen.back().b;
       return;
     }
+
+    void getRedWhiteBlueColorAtValue(const float value, float &red, float &green, float &blue)
+    {
+      if(color_RedWhiteBlue.size()==0)
+        return;
+
+      for(int i=0; i<color_RedWhiteBlue.size(); i++)
+      {
+        ColorPoint &currC = color_RedWhiteBlue[i];
+        if(value < currC.val)
+        {
+          ColorPoint &prevC  = color_RedWhiteBlue[ max(0,i-1) ];
+          float valueDiff    = (prevC.val - currC.val);
+          float fractBetween = (valueDiff==0) ? 0 : (value - currC.val) / valueDiff;
+          red   = (prevC.r - currC.r)*fractBetween + currC.r;
+          green = (prevC.g - currC.g)*fractBetween + currC.g;
+          blue  = (prevC.b - currC.b)*fractBetween + currC.b;
+          return;
+        }
+      }
+      red   = color_RedWhiteBlue.back().r;
+      green = color_RedWhiteBlue.back().g;
+      blue  = color_RedWhiteBlue.back().b;
+      return;
+    }
   
     void getRedWhiteRedColorAtValue(const float value, float &red, float &green, float &blue)
     {
@@ -189,6 +242,56 @@ namespace ColorGradient
       blue  = color_RedWhiteRed.back().b;
       return;
     }
+
+    void getWhiteYellowColorAtValue(const float value, float &red, float &green, float &blue)
+    {
+      if(color_WhiteYellow.size()==0)
+        return;
+
+      for(int i=0; i<color_WhiteYellow.size(); i++)
+      {
+        ColorPoint &currC = color_WhiteYellow[i];
+        if(value < currC.val)
+        {
+          ColorPoint &prevC  = color_WhiteYellow[ max(0,i-1) ];
+          float valueDiff    = (prevC.val - currC.val);
+          float fractBetween = (valueDiff==0) ? 0 : (value - currC.val) / valueDiff;
+          red   = (prevC.r - currC.r)*fractBetween + currC.r;
+          green = (prevC.g - currC.g)*fractBetween + currC.g;
+          blue  = (prevC.b - currC.b)*fractBetween + currC.b;
+          return;
+        }
+      }
+      red   = color_WhiteYellow.back().r;
+      green = color_WhiteYellow.back().g;
+      blue  = color_WhiteYellow.back().b;
+      return;
+    }
+
+    void getWhiteBlueColorAtValue(const float value, float &red, float &green, float &blue)
+    {
+      if(color_WhiteBlue.size()==0)
+        return;
+
+      for(int i=0; i<color_WhiteBlue.size(); i++)
+      {
+        ColorPoint &currC = color_WhiteBlue[i];
+        if(value < currC.val)
+        {
+          ColorPoint &prevC  = color_WhiteBlue[ max(0,i-1) ];
+          float valueDiff    = (prevC.val - currC.val);
+          float fractBetween = (valueDiff==0) ? 0 : (value - currC.val) / valueDiff;
+          red   = (prevC.r - currC.r)*fractBetween + currC.r;
+          green = (prevC.g - currC.g)*fractBetween + currC.g;
+          blue  = (prevC.b - currC.b)*fractBetween + currC.b;
+          return;
+        }
+      }
+      red   = color_WhiteBlue.back().r;
+      green = color_WhiteBlue.back().g;
+      blue  = color_WhiteBlue.back().b;
+      return;
+    }
   
   };
   
@@ -200,7 +303,10 @@ namespace ColorGradient
   	heatMapGradient.createDefaultHeatMapGradient();
     heatMapGradient.createMonochromeGradient();
     heatMapGradient.createRedWhiteGreenGradient();
+    heatMapGradient.createRedWhiteBlueGradient();
     heatMapGradient.createRedWhiteRedGradient();
+    heatMapGradient.createWhiteYellowGradient();
+    heatMapGradient.createWhiteBlueGradient();
   }
   
   double normalise_value(double v_min, double v_max, double v){
@@ -252,6 +358,36 @@ namespace ColorGradient
   	float rC,gC,bC;
   	heatMapGradient.getRedWhiteRedColorAtValue(yourGradientValue, rC,gC,bC);
     update_lattice_RGB(line,col,(int)(255*rC),(int)(255*gC),(int)(255*bC));
+  }
+
+  void LSD_lattice_update_WhiteYellow(double line, double col, double yourGradientValue){
+  	float rC,gC,bC;
+  	heatMapGradient.getWhiteYellowColorAtValue(yourGradientValue, rC,gC,bC);
+    update_lattice_RGB(line,col,(int)(255*rC),(int)(255*gC),(int)(255*bC));
+  }
+
+  void LSD_lattice_update_WhiteBlue(double line, double col, double yourGradientValue){
+  	float rC,gC,bC;
+  	heatMapGradient.getWhiteBlueColorAtValue(yourGradientValue, rC,gC,bC);
+    update_lattice_RGB(line,col,(int)(255*rC),(int)(255*gC),(int)(255*bC));
+  }
+
+  int LSD_rgb(float value, int grad_choice){
+    float r,g,b;
+    if (grad_choice == 0) {
+      heatMapGradient.getMonochromeColorAtValue(value,r,g,b);
+    } else if (grad_choice == 1) {
+      heatMapGradient.getRedWhiteGreenColorAtValue(value,r,g,b);
+    } else if (grad_choice == 2) {
+      heatMapGradient.getRedWhiteBlueColorAtValue(value,r,g,b);
+    } else if (grad_choice == 3) {
+      heatMapGradient.getRedWhiteRedColorAtValue(value,r,g,b);
+    } else if (grad_choice == 4) {
+      heatMapGradient.getWhiteYellowColorAtValue(value,r,g,b);
+    } else if (grad_choice == 5) {
+      heatMapGradient.getWhiteBlueColorAtValue(value,r,g,b);
+    }
+    return -createRGB(int(255*r),int(255*g),int(255*b)); //return rgb for LSD
   }
 
 }
